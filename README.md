@@ -40,9 +40,3 @@ altimeter/thermometer function without any additional sensor.
 
 # Important links
 •	[MS5611 Datasheet](https://datasheetspdf.com/pdf-file/921406/measurement/MS5611-01BA03/1)
-
-![]img src="http://C:\Users\yunus\OneDrive\Masaüstü\ProjeResimleri\MS5611/to/ornek.png"
-
-
-
-

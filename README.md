@@ -33,9 +33,10 @@ altimeter/thermometer function without any additional sensor.
 • Indoor navigation
 
 
-
 # Important links
 •	[MS5611 Datasheet](https://datasheetspdf.com/pdf-file/921406/measurement/MS5611-01BA03/1)
+
+
 
 
 

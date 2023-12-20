@@ -3,11 +3,17 @@
 
 # FIELD OF APPLICATION
 • High resolution module, 10 cm
+
 • Fast conversion down to 1 ms
+
 • Low power, 1 µA (standby < 0.15 µA)
+
 • Integrated digital pressure sensor (24 bit ΔΣ ADC)
+
 • Operating range: 10 to 1200 mbar, -40 to +85 °C
+
 • I2C and SPI interface up to 20 MHz
+
 
 
 # DESCRIPTION
@@ -22,14 +28,19 @@ altimeter/thermometer function without any additional sensor.
 
 # FIELD OF APPLICATION
 • Mobile altimeter / barometer systems
+
 • Bike computers
+
 • Variometers
+
 • Height sensing for medical alarms
+
 • Indoor navigation
 
 
+
 # Important links
-•	[MS5611](https://datasheetspdf.com/pdf-file/921406/measurement/MS5611-01BA03/1)
+•	[MS5611 Datasheet](https://datasheetspdf.com/pdf-file/921406/measurement/MS5611-01BA03/1)
 
 
 

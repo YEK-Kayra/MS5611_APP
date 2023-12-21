@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "ms5611.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -31,7 +31,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define MS5611_I2C_ADDRESS 0xEE
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -40,7 +40,13 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+
+MS5611_HandleTypeDef MS5611;
 I2C_HandleTypeDef hi2c1;
+
+float  MS5611_Press;
+float  MS5611_Temp;
+float  MS5611_VertAlt;
 
 /* USER CODE BEGIN PV */
 
@@ -89,7 +95,13 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+#ifdef MS5611_H_
 
+  MS5611.I2C_ADDRESS = MS5611_I2C_ADDRESS;
+  MS5611.i2c = &hi2c1;
+  MS5611_Init(&MS5611);
+
+#endif
   /* USER CODE END 2 */
 
   /* Infinite loop */

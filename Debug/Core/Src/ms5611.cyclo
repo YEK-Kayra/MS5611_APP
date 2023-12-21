@@ -1,1 +1,3 @@
-../Core/Src/ms5611.c:4:7:MS5611_Init	1
+../Core/Src/ms5611.c:4:22:MS5611_Init	1
+../Core/Src/ms5611.c:9:22:MS5611_Calc_Temp	1
+../Core/Src/ms5611.c:17:22:MS5611_Calc_Press	1

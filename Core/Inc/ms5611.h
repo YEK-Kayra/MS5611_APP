@@ -49,12 +49,14 @@ typedef struct{
 	uint16_t C5;	/*! Reference temperature 20 °C 					(Tref) 	   */
 	uint16_t C6;	/*! Temperature coefficient of the temperature 		(TEMPSENS) */
 
+	uint16_t crc;	/*! 4-bit CRC has been implemented to check the data validity in memory*/
+
 }MS5611_CalibrationCoef_TypeDef;
 
 typedef struct{
 
-	uint32_t D1;	/*! Digital pressure value */
-	uint32_t D2;	/*! Digital temperature value */
+	uint32_t D1;	/*! Digital raw pressure value */
+	uint32_t D2;	/*! Digital raw temperature value */
 
 	int32_t dT;		/*! Difference between actual and reference temperature */
 	int32_t TEMP;	/*! Actual temperature (-40…85°C with 0.01°C resolution) */
@@ -62,6 +64,12 @@ typedef struct{
 
 	int64_t OFF;	/*! Offset at actual temperature */
 	int64_t SENS;	/*! Sensitivity at actual temperature */
+
+	int64_t OFF2;	/*! Offset at actual temperature_2 */
+	int64_t SENS2;  /*! Sensitivity at actual temperature_2 */
+	int32_t TEMP2; 	/*! Actual temperature_2 (-40…<20°C with 0.01°C resolution) */
+
+
 
 }MS5611_CalculationParams_TypeDef;
 
@@ -96,8 +104,12 @@ MS5611_StatusTypeDef MS5611_Init(MS5611_HandleTypeDef *dev);
   */
 MS5611_StatusTypeDef MS5611_Get_CalibCoeff(MS5611_HandleTypeDef *dev);
 
+MS5611_StatusTypeDef MS5611_ScndOrd_Calc_Press_Temp(MS5611_HandleTypeDef *dev);
+
 MS5611_StatusTypeDef MS5611_Calc_Temp(MS5611_HandleTypeDef *dev);
 MS5611_StatusTypeDef MS5611_Calc_Press(MS5611_HandleTypeDef *dev);
+
+
 
 
 

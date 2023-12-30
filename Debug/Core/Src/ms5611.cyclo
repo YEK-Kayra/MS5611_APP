@@ -1,3 +1,5 @@
-../Core/Src/ms5611.c:4:22:MS5611_Init	1
-../Core/Src/ms5611.c:9:22:MS5611_Calc_Temp	1
-../Core/Src/ms5611.c:17:22:MS5611_Calc_Press	1
+../Core/Src/ms5611.c:4:22:MS5611_Init	2
+../Core/Src/ms5611.c:17:22:MS5611_Get_CalibCoeff	1
+../Core/Src/ms5611.c:35:22:MS5611_Calc_Temp	3
+../Core/Src/ms5611.c:75:22:MS5611_ScndOrd_Calc_Press_Temp	1
+../Core/Src/ms5611.c:83:22:MS5611_Calc_Press	1

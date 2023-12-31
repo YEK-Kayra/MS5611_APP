@@ -13,6 +13,11 @@
 #include "stdint.h"
 #include "math.h"
 
+/******************************************************************************
+         			#### MS5611 VARIABLES ####
+******************************************************************************/
+
+
 
 /******************************************************************************
          			#### MS5611 EXTERNAL VARIABLES ####
@@ -106,9 +111,11 @@ MS5611_StatusTypeDef MS5611_Get_CalibCoeff(MS5611_HandleTypeDef *dev);
 
 MS5611_StatusTypeDef MS5611_ScndOrd_Calc_Press_Temp(MS5611_HandleTypeDef *dev);
 
+MS5611_StatusTypeDef MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev);
+
 MS5611_StatusTypeDef MS5611_Calc_Temp(MS5611_HandleTypeDef *dev);
 MS5611_StatusTypeDef MS5611_Calc_Press(MS5611_HandleTypeDef *dev);
-
+MS5611_StatusTypeDef MS5611_Reset(MS5611_HandleTypeDef *dev);
 
 
 

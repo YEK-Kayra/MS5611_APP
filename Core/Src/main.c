@@ -44,9 +44,8 @@
 MS5611_HandleTypeDef MS5611;
 I2C_HandleTypeDef hi2c1;
 
-float  MS5611_Press;
-float  MS5611_Temp;
-float  MS5611_VertAlt;
+int32_t MS5611_Press;
+int32_t  MS5611_Temp;
 
 /* USER CODE BEGIN PV */
 
@@ -108,6 +107,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+	  MS5611_ReadValues(&MS5611, &MS5611_Press, &MS5611_Temp);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

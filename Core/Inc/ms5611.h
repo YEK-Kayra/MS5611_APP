@@ -14,20 +14,12 @@
 #include "math.h"
 
 /******************************************************************************
-         			#### MS5611 VARIABLES ####
-******************************************************************************/
-
-
-
-/******************************************************************************
          			#### MS5611 EXTERNAL VARIABLES ####
 ******************************************************************************/
 
 extern I2C_HandleTypeDef hi2c1;
-extern float  MS5611_Press;		/*! Pressure data variable 			*/
-extern float  MS5611_Temp;		/*! Temperature data variable 		*/
-extern float  MS5611_VertAlt;	/*! Vertical Altitude data variable */
-
+extern int32_t  MS5611_Press;		/*! Pressure data variable 			*/
+extern int32_t  MS5611_Temp;		/*! Temperature data variable 		*/
 
 /******************************************************************************
          				#### MS5611 ENUMS ####
@@ -74,8 +66,6 @@ typedef struct{
 	int64_t SENS2;  /*! Sensitivity at actual temperature_2 */
 	int32_t TEMP2; 	/*! Actual temperature_2 (-40…<20°C with 0.01°C resolution) */
 
-
-
 }MS5611_CalculationParams_TypeDef;
 
 
@@ -92,7 +82,7 @@ typedef struct{
 
 
 /******************************************************************************
-         			#### BMP390 PROTOTYPES OF FUNCTIONS ####
+         			#### MS5611 PROTOTYPES OF FUNCTIONS ####
 ******************************************************************************/
 
 /**
@@ -102,22 +92,62 @@ typedef struct{
   */
 MS5611_StatusTypeDef MS5611_Init(MS5611_HandleTypeDef *dev);
 
+
 /**
   * @brief  Retrieves calibration coefficient data(from C1 to C6) from the MS5611 chip and stores them in CalibDatas.
   * @param  dev_MS5611 general handle.
-  * @retval booleans.
+  * @retval MS5611 Status.
   */
 MS5611_StatusTypeDef MS5611_Get_CalibCoeff(MS5611_HandleTypeDef *dev);
 
-MS5611_StatusTypeDef MS5611_ScndOrd_Calc_Press_Temp(MS5611_HandleTypeDef *dev);
 
-MS5611_StatusTypeDef MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev);
-
-MS5611_StatusTypeDef MS5611_Calc_Temp(MS5611_HandleTypeDef *dev);
-MS5611_StatusTypeDef MS5611_Calc_Press(MS5611_HandleTypeDef *dev);
+/**
+  * @brief  MS5611 are reset and if it's not completed successfully the sensor is initialized one more time
+  * @param  dev_MS5611 general handle.
+  * @retval MS5611 Status.
+  */
 MS5611_StatusTypeDef MS5611_Reset(MS5611_HandleTypeDef *dev);
 
 
+/**
+  * @brief  ADC Registers will be reading for raw pressure and temperature values
+  * @param  dev_MS5611 general handle.
+  * @retval MS5611 Status.
+  */
+MS5611_StatusTypeDef MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev);
 
+
+/**
+  * @brief  Optimisation function(if celsius degrees is under 20)
+  * @param  dev_MS5611 general handle.
+  * @retval MS5611 Status.
+  */
+MS5611_StatusTypeDef MS5611_ScndOrd_Calc_Press_Temp(MS5611_HandleTypeDef *dev);
+
+
+/**
+  * @brief  Calculates compensated temperature
+  * @param  dev_MS5611 general handle.
+  * @retval MS5611 Status.
+  */
+MS5611_StatusTypeDef MS5611_Calc_Temp(MS5611_HandleTypeDef *dev);
+
+
+/**
+  * @brief  Calculates compensated pressure
+  * @param  dev_MS5611 general handle.
+  * @retval MS5611 Status.
+  */
+MS5611_StatusTypeDef MS5611_Calc_Press(MS5611_HandleTypeDef *dev);
+
+
+/**
+  * @brief  It is the function to execute MS5611
+  * @param  dev_MS5611 general handle.
+  * @param 	*press will get the actual pressure value
+  * @param  *temp  will get the actual temperature value
+  * @retval MS5611 Status.
+  */
+MS5611_StatusTypeDef MS5611_ReadValues(MS5611_HandleTypeDef *dev, int32_t *press, int32_t *temp);
 
 #endif /* INC_MS5611_H_ */

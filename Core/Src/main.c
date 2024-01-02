@@ -44,8 +44,8 @@
 MS5611_HandleTypeDef MS5611;
 I2C_HandleTypeDef hi2c1;
 
-int32_t MS5611_Press;
-int32_t  MS5611_Temp;
+float MS5611_Press;
+float  MS5611_Temp;
 
 /* USER CODE BEGIN PV */
 

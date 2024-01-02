@@ -18,8 +18,8 @@
 ******************************************************************************/
 
 extern I2C_HandleTypeDef hi2c1;
-extern int32_t  MS5611_Press;		/*! Pressure data variable 			*/
-extern int32_t  MS5611_Temp;		/*! Temperature data variable 		*/
+extern float  MS5611_Press;		/*! Pressure data variable 			*/
+extern float  MS5611_Temp;		/*! Temperature data variable 		*/
 
 /******************************************************************************
          				#### MS5611 ENUMS ####
@@ -54,17 +54,14 @@ typedef struct{
 
 	uint32_t D1;	/*! Digital raw pressure value */
 	uint32_t D2;	/*! Digital raw temperature value */
-
 	int32_t dT;		/*! Difference between actual and reference temperature */
-	int32_t TEMP;	/*! Actual temperature (-40…85°C with 0.01°C resolution) */
-	int32_t P;		/*! Temperature compensated pressure (10…1200mbar with 0.01mbar resolution) */
-
+	int64_t TEMP;	/*! Actual temperature (-40…85°C with 0.01°C resolution) */
+	int64_t P;		/*! Temperature compensated pressure (10…1200mbar with 0.01mbar resolution) */
 	int64_t OFF;	/*! Offset at actual temperature */
 	int64_t SENS;	/*! Sensitivity at actual temperature */
-
 	int64_t OFF2;	/*! Offset at actual temperature_2 */
 	int64_t SENS2;  /*! Sensitivity at actual temperature_2 */
-	int32_t TEMP2; 	/*! Actual temperature_2 (-40…<20°C with 0.01°C resolution) */
+	int64_t TEMP2; 	/*! Actual temperature_2 (-40…<20°C with 0.01°C resolution) */
 
 }MS5611_CalculationParams_TypeDef;
 
@@ -148,6 +145,6 @@ MS5611_StatusTypeDef MS5611_Calc_Press(MS5611_HandleTypeDef *dev);
   * @param  *temp  will get the actual temperature value
   * @retval MS5611 Status.
   */
-MS5611_StatusTypeDef MS5611_ReadValues(MS5611_HandleTypeDef *dev, int32_t *press, int32_t *temp);
+MS5611_StatusTypeDef MS5611_ReadValues(MS5611_HandleTypeDef *dev, float *press, float *temp);
 
 #endif /* INC_MS5611_H_ */

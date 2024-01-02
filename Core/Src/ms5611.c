@@ -19,7 +19,7 @@ uint8_t osrs_2048_D2 = 0x56;
 uint8_t osrs_4096_D2 = 88;
 
 /*! Command value for request getting raw pressure and temperature value*/
-uint8_t adc_read = 0x00;
+uint8_t adc_read = 0;
 
 /******************************************************************************
          			#### MS5611 FUNCTIONS ####
@@ -31,6 +31,9 @@ MS5611_StatusTypeDef MS5611_Init(MS5611_HandleTypeDef *dev){
 			 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
 
 	 }
+
+	MS5611_Reset(dev);
+	HAL_Delay(10);
 
 	MS5611_Get_CalibCoeff(dev);
 
@@ -114,12 +117,16 @@ MS5611_StatusTypeDef MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev){
 	 * (3)Save incoming data to arrays as msb, lsb, xlsb
 	 */
 	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &osrs_4096_D1, 1, 1000); //(1)
+	HAL_Delay(15);//12
 	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &adc_read , 1, 1000);	 //(2)
+	HAL_Delay(15);
 	HAL_I2C_Master_Receive(dev->i2c, dev->I2C_ADDRESS, &RawDataD1[0], 3, 1000);	 //(3)
 	dev->ClcPrms.D1 = (uint32_t)((RawDataD1[0]<<16) | (RawDataD1[1]<<8) | (RawDataD1[2]<<0)); // MSB|LSB|XLSB
 
 	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &osrs_4096_D2, 1, 1000); //(1)
+	HAL_Delay(15);
 	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &adc_read , 1, 1000);  	 //(2)
+	HAL_Delay(15);
 	HAL_I2C_Master_Receive(dev->i2c, dev->I2C_ADDRESS, &RawDataD2[0], 3, 1000);  //(3)
 	dev->ClcPrms.D2 = (uint32_t)((RawDataD2[0]<<16) | (RawDataD2[1]<<8) | (RawDataD2[2]<<0)); // MSB|LSB|XLSB
 
@@ -129,19 +136,19 @@ MS5611_StatusTypeDef MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev){
 
 MS5611_StatusTypeDef MS5611_Calc_Temp(MS5611_HandleTypeDef *dev){
 
-	dev->ClcPrms.dT   = (dev->ClcPrms.D2 - (dev->Clb_Cf.C5 * pow(2,8)));
-	dev->ClcPrms.TEMP = (20 + (dev->ClcPrms.dT * dev->Clb_Cf.C6));
+	dev->ClcPrms.dT   = (dev->ClcPrms.D2 - (dev->Clb_Cf.C5 * 256));
+	dev->ClcPrms.TEMP = (2000 + (dev->ClcPrms.dT * dev->Clb_Cf.C6 >> 23));
 
 	if(dev->ClcPrms.TEMP < 20){
 
-		dev->ClcPrms.TEMP2 = (dev->ClcPrms.dT * dev->ClcPrms.dT) / pow(2,31);
-		dev->ClcPrms.OFF2  = (5 * pow((dev->ClcPrms.TEMP - 2000),2) / 2);
-		dev->ClcPrms.SENS2 = (5 * pow((dev->ClcPrms.TEMP - 2000),2) / 4);
+		dev->ClcPrms.TEMP2 = (dev->ClcPrms.dT * dev->ClcPrms.dT) >> 31;
+		dev->ClcPrms.OFF2  = (5 * ((dev->ClcPrms.TEMP - 2000)*(dev->ClcPrms.TEMP - 2000)) >> 1);
+		dev->ClcPrms.SENS2 = (5 * ((dev->ClcPrms.TEMP - 2000)*(dev->ClcPrms.TEMP - 2000)) >> 2);
 
 				if(dev->ClcPrms.TEMP < -15){
 
-					dev->ClcPrms.OFF2  = dev->ClcPrms.OFF2 + 7 * pow((dev->ClcPrms.TEMP + 1500),2);
-					dev->ClcPrms.SENS2 = (dev->ClcPrms.SENS2 + 11 * pow((dev->ClcPrms.TEMP + 1500),2) / 2);
+					dev->ClcPrms.OFF2  = dev->ClcPrms.OFF2 + 7 * ((dev->ClcPrms.TEMP + 1500)*(dev->ClcPrms.TEMP + 1500));
+					dev->ClcPrms.SENS2 = (dev->ClcPrms.SENS2 + 11 * ((dev->ClcPrms.TEMP + 1500)*(dev->ClcPrms.TEMP + 1500)) >> 1);
 					MS5611_ScndOrd_Calc_Press_Temp(dev);
 
 				}
@@ -177,14 +184,14 @@ MS5611_StatusTypeDef MS5611_ScndOrd_Calc_Press_Temp(MS5611_HandleTypeDef *dev){
 
 MS5611_StatusTypeDef MS5611_Calc_Press(MS5611_HandleTypeDef *dev){
 
-	dev->ClcPrms.OFF  = (dev->Clb_Cf.C2 * pow(2,16)) + (((dev->Clb_Cf.C4 ) * (dev->ClcPrms.dT)) / pow(2,7));
-	dev->ClcPrms.SENS = ((dev->Clb_Cf.C1 * pow(2,15)) + (dev->Clb_Cf.C3 * dev->ClcPrms.dT) / pow(2,8));
-	dev->ClcPrms.P 	  = (((dev->ClcPrms.D1 * dev->ClcPrms.SENS / pow(2,21)) - dev->ClcPrms.OFF)/pow(2,15));
+	dev->ClcPrms.OFF  = (dev->Clb_Cf.C2 <<16) + (((dev->Clb_Cf.C4 ) * ((dev->ClcPrms.dT)) >>7));
+	dev->ClcPrms.SENS = ((dev->Clb_Cf.C1 <<15) + ((dev->Clb_Cf.C3 * dev->ClcPrms.dT)>>8));
+	dev->ClcPrms.P 	  = ((dev->ClcPrms.D1 * dev->ClcPrms.SENS >>21 - dev->ClcPrms.OFF)>>15);
 
 	return MS5611_OK;
 }
 
-MS5611_StatusTypeDef MS5611_ReadValues(MS5611_HandleTypeDef *dev, int32_t *press, int32_t *temp){
+MS5611_StatusTypeDef MS5611_ReadValues(MS5611_HandleTypeDef *dev, float *press, float *temp){
 
 	MS5611_ReadRaw_Press_Temp(dev);
 	MS5611_Calc_Temp(dev);

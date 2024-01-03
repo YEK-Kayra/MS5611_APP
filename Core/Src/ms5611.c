@@ -107,7 +107,7 @@ MS5611_StatusTypeDef MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev){
 	 */
 
 	/*! Gets D1(Raw Pressure)*/
-	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &osrs_1024_D1, 1, 1000); //(1)
+	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &osrs_4096_D1, 1, 1000); //(1)
 	HAL_Delay(20);
 	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &adcReadCom , 1, 1000);	 //(2)
 	HAL_Delay(20);
@@ -115,7 +115,7 @@ MS5611_StatusTypeDef MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev){
 	dev->ClcPrms.D1 = (uint32_t)((RawDataD1[0]<<16) | (RawDataD1[1]<<8) | (RawDataD1[2]<<0)); // MSB|LSB|XLSB
 
 	/*! Gets D2(Raw Temperature)*/
-	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &osrs_1024_D2, 1, 1000); //(1)
+	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &osrs_4096_D2, 1, 1000); //(1)
 	HAL_Delay(20);
 	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &adcReadCom , 1, 1000);  	 //(2)
 	HAL_Delay(20);
@@ -126,62 +126,85 @@ MS5611_StatusTypeDef MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev){
 
 }
 
-MS5611_StatusTypeDef MS5611_Calc_Temp_Press(MS5611_HandleTypeDef *dev){
 
-	MS5611_ReadRaw_Press_Temp(dev);
+MS5611_StatusTypeDef MS5611_FirstCalculateDatas(MS5611_HandleTypeDef *dev){
 
 	/*! Calculate 1st order temperature and pressure  according to MS5611 1st order algorithm */
 	dev->ClcPrms.dT   = dev->ClcPrms.D2 - dev->Clb_Cf.C5 * pow(2,8);
 	dev->ClcPrms.OFF  = dev->Clb_Cf.C2 * pow(2,17) + (dev->Clb_Cf.C4 * dev->ClcPrms.dT) / pow(2,6);
 	dev->ClcPrms.SENS = dev->Clb_Cf.C1 * pow(2,16) + (dev->Clb_Cf.C3 * dev->ClcPrms.dT) / pow(2,7);
 
-	dev->ClcPrms.TEMP = 2000 + dev->ClcPrms.dT * dev->Clb_Cf.C6 / pow(2,23);
-	dev->ClcPrms.P	  = ((dev->ClcPrms.D1 * dev->ClcPrms.SENS / pow(2,21) - dev->ClcPrms.OFF))/pow(2,15);
+	dev->ClcPrms.TEMP = 2000 + dev->ClcPrms.dT * dev->Clb_Cf.C6 / pow(2,23);								//Actual temperature data
+	dev->ClcPrms.P	  = ((dev->ClcPrms.D1 * dev->ClcPrms.SENS / pow(2,21) - dev->ClcPrms.OFF))/pow(2,15);	//Actual pressure data
+
+}
 
 
-	/*! Calculate 2st order temperature and pressure  according to MS5611 2st order algorithm */
+MS5611_StatusTypeDef MS5611_SecondCalculateDatas(MS5611_HandleTypeDef *dev){
+
 	if(dev->ClcPrms.TEMP < 2000){
 
-		/*! Low Temperature */
-		dev->ClcPrms.TEMP2 = (dev->ClcPrms.dT * dev->ClcPrms.dT) / pow(2,31);
-		dev->ClcPrms.OFF2  = 5 * ((dev->ClcPrms.TEMP - 2000) * (dev->ClcPrms.TEMP - 2000)) / pow(2,1);
-		dev->ClcPrms.SENS2 = 5 * ((dev->ClcPrms.TEMP - 2000) * (dev->ClcPrms.TEMP - 2000)) / pow(2,2);
+			/*! Low Temperature */
+			dev->ClcPrms.TEMP2 = (dev->ClcPrms.dT * dev->ClcPrms.dT) / pow(2,31);
+			dev->ClcPrms.OFF2  = 5 * ((dev->ClcPrms.TEMP - 2000) * (dev->ClcPrms.TEMP - 2000)) / pow(2,1);
+			dev->ClcPrms.SENS2 = 5 * ((dev->ClcPrms.TEMP - 2000) * (dev->ClcPrms.TEMP - 2000)) / pow(2,2);
 
-				if(dev->ClcPrms.TEMP < -1500){
-					/*! Very Low Temperature */
-					dev->ClcPrms.OFF2  = dev->ClcPrms.OFF2 + 7 * ((dev->ClcPrms.TEMP + 1500) * (dev->ClcPrms.TEMP + 1500));
-					dev->ClcPrms.SENS2 = dev->ClcPrms.SENS2 + 11 * ((dev->ClcPrms.TEMP + 1500) * (dev->ClcPrms.TEMP + 1500)) / pow(2,1);
+					if(dev->ClcPrms.TEMP < -1500){
+						/*! Very Low Temperature */
+						dev->ClcPrms.OFF2  = dev->ClcPrms.OFF2 + 7 * ((dev->ClcPrms.TEMP + 1500) * (dev->ClcPrms.TEMP + 1500));
+						dev->ClcPrms.SENS2 = dev->ClcPrms.SENS2 + 11 * ((dev->ClcPrms.TEMP + 1500) * (dev->ClcPrms.TEMP + 1500)) / pow(2,1);
 
-					dev->ClcPrms.TEMP = dev->ClcPrms.TEMP - dev->ClcPrms.TEMP2;
-					dev->ClcPrms.OFF  = dev->ClcPrms.OFF - dev->ClcPrms.OFF2;
-					dev->ClcPrms.SENS = dev->ClcPrms.SENS - dev->ClcPrms.SENS2;
+						dev->ClcPrms.TEMP = dev->ClcPrms.TEMP - dev->ClcPrms.TEMP2;
+						dev->ClcPrms.OFF  = dev->ClcPrms.OFF - dev->ClcPrms.OFF2;
+						dev->ClcPrms.SENS = dev->ClcPrms.SENS - dev->ClcPrms.SENS2;
 
-				}
-				else{
+					}
+					else{
 
-					dev->ClcPrms.TEMP = dev->ClcPrms.TEMP - dev->ClcPrms.TEMP2;
-					dev->ClcPrms.OFF  = dev->ClcPrms.OFF - dev->ClcPrms.OFF2;
-					dev->ClcPrms.SENS = dev->ClcPrms.SENS - dev->ClcPrms.SENS2;
+						dev->ClcPrms.TEMP = dev->ClcPrms.TEMP - dev->ClcPrms.TEMP2;
+						dev->ClcPrms.OFF  = dev->ClcPrms.OFF - dev->ClcPrms.OFF2;
+						dev->ClcPrms.SENS = dev->ClcPrms.SENS - dev->ClcPrms.SENS2;
 
-				}
+					}
 
 
-	}
-	else{
-		/*! High Temperature */
-		dev->ClcPrms.TEMP2 = 0;
-		dev->ClcPrms.OFF2  = 0;
-		dev->ClcPrms.SENS2 = 0;
+		}
+		else{
+			/*! High Temperature */
+			dev->ClcPrms.TEMP2 = 0;
+			dev->ClcPrms.OFF2  = 0;
+			dev->ClcPrms.SENS2 = 0;
 
-		dev->ClcPrms.TEMP = dev->ClcPrms.TEMP - dev->ClcPrms.TEMP2;
-		dev->ClcPrms.OFF  = dev->ClcPrms.OFF - dev->ClcPrms.OFF2;
-		dev->ClcPrms.SENS = dev->ClcPrms.SENS - dev->ClcPrms.SENS2;
+			dev->ClcPrms.TEMP = dev->ClcPrms.TEMP - dev->ClcPrms.TEMP2;
+			dev->ClcPrms.OFF  = dev->ClcPrms.OFF - dev->ClcPrms.OFF2;
+			dev->ClcPrms.SENS = dev->ClcPrms.SENS - dev->ClcPrms.SENS2;
 
-	}
+		}
+}
 
-	MS5611_Altitude = (SeaLevelTemp / GradientTemp) * (1 - pow((dev->ClcPrms.P / SeaLevelPress),((GasCoefficient * GradientTemp)/GravityAccel)));
-	MS5611_Press = dev->ClcPrms.P ;
-	MS5611_Temp  = dev->ClcPrms.TEMP ;
+float MS5611_Calc_Altitude(MS5611_HandleTypeDef *dev){
+
+	return (SeaLevelTemp / GradientTemp) * (1 - pow((dev->ClcPrms.P / SeaLevelPress),((GasCoefficient * GradientTemp)/GravityAccel)));
+
+}
+
+MS5611_StatusTypeDef MS5611_Read_ActVal(MS5611_HandleTypeDef *dev){
+
+	/*! Read raw pressure and temperature MSB | LSB | XLSB values from the sensor*/
+	MS5611_ReadRaw_Press_Temp(dev);
+
+	/*! Calculate 1st order temperature and pressure  according to MS5611 1st order algorithm */
+	MS5611_FirstCalculateDatas(dev);
+
+	/*! If it's needed, Calculate 2st order temperature and pressure  according to MS5611 2st order algorithm */
+	MS5611_SecondCalculateDatas(dev);
+
+	/*! Vertical Altitude is calculated by using pressure and some coefficients */
+	MS5611_Altitude = MS5611_Calc_Altitude(dev);
+
+	/*! Pressure unit is mBar and Temperature unit is celcius degress*/
+	MS5611_Press = dev->ClcPrms.P * 0.01 ;			//1001.25mBar
+	MS5611_Temp  = dev->ClcPrms.TEMP * 0.01 ;		//25.57 CelciusDegress
 
 	return MS5611_OK;
 }

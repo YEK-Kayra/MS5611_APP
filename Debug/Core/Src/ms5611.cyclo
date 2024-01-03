@@ -1,5 +1,8 @@
 ../Core/Src/ms5611.c:27:22:MS5611_Init	2
-../Core/Src/ms5611.c:47:22:MS5611_Reset	1
-../Core/Src/ms5611.c:56:22:MS5611_Get_CalibCoeff	3
-../Core/Src/ms5611.c:99:22:MS5611_ReadRaw_Press_Temp	1
-../Core/Src/ms5611.c:127:22:MS5611_Calc_Temp_Press	3
+../Core/Src/ms5611.c:44:22:MS5611_Reset	1
+../Core/Src/ms5611.c:51:22:MS5611_Get_CalibCoeff	3
+../Core/Src/ms5611.c:96:22:MS5611_ReadRaw_Press_Temp	1
+../Core/Src/ms5611.c:130:22:MS5611_FirstCalculateDatas	1
+../Core/Src/ms5611.c:143:22:MS5611_SecondCalculateDatas	3
+../Core/Src/ms5611.c:185:7:MS5611_Calc_Altitude	1
+../Core/Src/ms5611.c:191:22:MS5611_Read_ActVal	1

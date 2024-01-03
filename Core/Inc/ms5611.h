@@ -18,9 +18,9 @@
 ******************************************************************************/
 
 extern I2C_HandleTypeDef hi2c1;
-extern int  MS5611_Press;		/*! Pressure data variable 			*/
-extern int  MS5611_Temp;		/*! Temperature data variable 		*/
-extern int  MS5611_Altitude;
+extern float  MS5611_Press;		/*! Pressure data variable 			*/
+extern float  MS5611_Temp;		/*! Temperature data variable 		*/
+extern float  MS5611_Altitude;	/*! Vertical Altitude data variable */
 
 /**!These macros provide to calculate the altitude of BMP280 */
 #define SeaLevelPress  101325
@@ -61,14 +61,14 @@ typedef struct{
 
 typedef struct{
 
-	uint32_t D1;	/*! Digital raw pressure value */
-	uint32_t D2;	/*! Digital raw temperature value */
+	uint32_t D1;		/*! Digital raw pressure value */
+	uint32_t D2;		/*! Digital raw temperature value */
 	float dT;			/*! Difference between actual and reference temperature */
-	float TEMP;		/*! Actual temperature (-40…85°C with 0.01°C resolution) */
+	float TEMP;			/*! Actual temperature (-40…85°C with 0.01°C resolution) */
 	float P;			/*! Temperature compensated pressure (10…1200mbar with 0.01mbar resolution) */
 	float OFF;			/*! Offset at actual temperature */
-	float SENS;		/*! Sensitivity at actual temperature */
-	float OFF2;		/*! Offset at actual temperature_2 */
+	float SENS;			/*! Sensitivity at actual temperature */
+	float OFF2;			/*! Offset at actual temperature_2 */
 	float SENS2;  		/*! Sensitivity at actual temperature_2 */
 	float TEMP2; 		/*! Actual temperature_2 (-40…<20°C with 0.01°C resolution) */
 
@@ -129,6 +129,10 @@ MS5611_StatusTypeDef MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev);
   * @param  dev_MS5611 general handle.
   * @retval MS5611 Status.
   */
-MS5611_StatusTypeDef MS5611_Calc_Temp_Press(MS5611_HandleTypeDef *dev);
+MS5611_StatusTypeDef MS5611_Read_ActVal(MS5611_HandleTypeDef *dev);
+
+MS5611_StatusTypeDef MS5611_FirstCalculateDatas(MS5611_HandleTypeDef *dev);
+MS5611_StatusTypeDef MS5611_SecondCalculateDatas(MS5611_HandleTypeDef *dev);
+float MS5611_Calc_Altitude(MS5611_HandleTypeDef *dev);
 
 #endif /* INC_MS5611_H_ */

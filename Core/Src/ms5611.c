@@ -18,9 +18,10 @@ uint8_t osrs_1024_D2 = 0x54;
 uint8_t osrs_2048_D2 = 0x56;
 uint8_t osrs_4096_D2 = 0x58;
 
-
 uint8_t adcReadCom = 0x00;	/*! Provides ADC read sequence by create an asking for getting raw pressure and temperature value */
 uint8_t ResetCom   = 0x1E;	/*! Resets command byte for sensor's mcu restart and clean parameters */
+
+
 /******************************************************************************
          			#### MS5611 FUNCTIONS ####
 ******************************************************************************/
@@ -40,15 +41,14 @@ MS5611_StatusTypeDef MS5611_Init(MS5611_HandleTypeDef *dev){
 }
 
 
-
-MS5611_StatusTypeDef MS5611_Reset(MS5611_HandleTypeDef *dev){
+void MS5611_Reset(MS5611_HandleTypeDef *dev){
 
 	HAL_I2C_Mem_Write(dev->i2c, dev->I2C_ADDRESS, dev->I2C_ADDRESS, 1, &ResetCom, 1, 1000);
 
-	return MS5611_OK;
 }
 
-MS5611_StatusTypeDef MS5611_Get_CalibCoeff(MS5611_HandleTypeDef *dev){
+
+void MS5611_Get_CalibCoeff(MS5611_HandleTypeDef *dev){
 
 	uint8_t CalibCoefAddrss[7] = {0xA2, //C1
 								  0xA4,	//C2
@@ -89,11 +89,10 @@ MS5611_StatusTypeDef MS5611_Get_CalibCoeff(MS5611_HandleTypeDef *dev){
 	dev->Clb_Cf.C6  = ((CalibCoefVal[cnt]<<8) | CalibCoefVal[cnt+1]); cnt+=2;
 	dev->Clb_Cf.crc = ((CalibCoefVal[cnt]<<8) | CalibCoefVal[cnt+1]); cnt+=2;
 
-	return MS5611_OK;
 }
 
 
-MS5611_StatusTypeDef MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev){
+void MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev){
 
 	uint8_t RawDataD1[3]  = {0}; /*! D1 = Raw pressure value that will be compensated at other functions*/
 	uint8_t RawDataD2[3]  = {0}; /*! D2 = Raw temperature value that will be compensated at other functions*/
@@ -122,12 +121,10 @@ MS5611_StatusTypeDef MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev){
 	HAL_I2C_Master_Receive(dev->i2c, dev->I2C_ADDRESS, &RawDataD2[0], 3, 1000);  //(3)
 	dev->ClcPrms.D2 = (uint32_t)((RawDataD2[0]<<16) | (RawDataD2[1]<<8) | (RawDataD2[2]<<0)); // MSB|LSB|XLSB
 
-	return MS5611_OK;
-
 }
 
 
-MS5611_StatusTypeDef MS5611_FirstCalculateDatas(MS5611_HandleTypeDef *dev){
+void MS5611_FirstCalculateDatas(MS5611_HandleTypeDef *dev){
 
 	/*! Calculate 1st order temperature and pressure  according to MS5611 1st order algorithm */
 	dev->ClcPrms.dT   = dev->ClcPrms.D2 - dev->Clb_Cf.C5 * pow(2,8);
@@ -140,7 +137,7 @@ MS5611_StatusTypeDef MS5611_FirstCalculateDatas(MS5611_HandleTypeDef *dev){
 }
 
 
-MS5611_StatusTypeDef MS5611_SecondCalculateDatas(MS5611_HandleTypeDef *dev){
+void MS5611_SecondCalculateDatas(MS5611_HandleTypeDef *dev){
 
 	if(dev->ClcPrms.TEMP < 2000){
 
@@ -167,7 +164,6 @@ MS5611_StatusTypeDef MS5611_SecondCalculateDatas(MS5611_HandleTypeDef *dev){
 
 					}
 
-
 		}
 		else{
 			/*! High Temperature */
@@ -182,11 +178,13 @@ MS5611_StatusTypeDef MS5611_SecondCalculateDatas(MS5611_HandleTypeDef *dev){
 		}
 }
 
+
 float MS5611_Calc_Altitude(MS5611_HandleTypeDef *dev){
 
 	return (SeaLevelTemp / GradientTemp) * (1 - pow((dev->ClcPrms.P / SeaLevelPress),((GasCoefficient * GradientTemp)/GravityAccel)));
 
 }
+
 
 MS5611_StatusTypeDef MS5611_Read_ActVal(MS5611_HandleTypeDef *dev){
 

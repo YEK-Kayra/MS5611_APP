@@ -100,11 +100,19 @@ MS5611_StatusTypeDef MS5611_Init(MS5611_HandleTypeDef *dev);
 
 
 /**
+  * @brief
+  * @param  dev_MS5611 general handle.
+  * @retval MS5611 Status.
+  */
+MS5611_StatusTypeDef MS5611_Read_ActVal(MS5611_HandleTypeDef *dev);
+
+
+/**
   * @brief  Retrieves calibration coefficient data(from C1 to C6) from the MS5611 chip and stores them in CalibDatas.
   * @param  dev_MS5611 general handle.
   * @retval MS5611 Status.
   */
-MS5611_StatusTypeDef MS5611_Get_CalibCoeff(MS5611_HandleTypeDef *dev);
+void MS5611_Get_CalibCoeff(MS5611_HandleTypeDef *dev);
 
 
 /**
@@ -112,7 +120,7 @@ MS5611_StatusTypeDef MS5611_Get_CalibCoeff(MS5611_HandleTypeDef *dev);
   * @param  dev_MS5611 general handle.
   * @retval MS5611 Status.
   */
-MS5611_StatusTypeDef MS5611_Reset(MS5611_HandleTypeDef *dev);
+void MS5611_Reset(MS5611_HandleTypeDef *dev);
 
 
 /**
@@ -120,19 +128,28 @@ MS5611_StatusTypeDef MS5611_Reset(MS5611_HandleTypeDef *dev);
   * @param  dev_MS5611 general handle.
   * @retval MS5611 Status.
   */
-MS5611_StatusTypeDef MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev);
-
+void MS5611_ReadRaw_Press_Temp(MS5611_HandleTypeDef *dev);
 
 
 /**
-  * @brief  Calculates compensated temperature
+  * @brief  Calculate 1st order temperature and pressure  according to MS5611 1st order algorithm
   * @param  dev_MS5611 general handle.
-  * @retval MS5611 Status.
   */
-MS5611_StatusTypeDef MS5611_Read_ActVal(MS5611_HandleTypeDef *dev);
+void MS5611_FirstCalculateDatas(MS5611_HandleTypeDef *dev);
 
-MS5611_StatusTypeDef MS5611_FirstCalculateDatas(MS5611_HandleTypeDef *dev);
-MS5611_StatusTypeDef MS5611_SecondCalculateDatas(MS5611_HandleTypeDef *dev);
+
+/**
+  * @brief  If it's needed, Calculate 2st order temperature and pressure  according to MS5611 2st order algorithm
+  * @param  dev_MS5611 general handle.
+  */
+void MS5611_SecondCalculateDatas(MS5611_HandleTypeDef *dev);
+
+
+/**
+  * @brief  Vertical Altitude is calculated by using pressure and some coefficients
+  * @param  dev_MS5611 general handle.
+  * @retval Vertical Altitude value
+  */
 float MS5611_Calc_Altitude(MS5611_HandleTypeDef *dev);
 
 #endif /* INC_MS5611_H_ */

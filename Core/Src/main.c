@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "ms5611.h"
+#include "ms5611.h"					/*! Include the header file ms5611*/
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -31,7 +31,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define MS5611_I2C_ADDRESS 0xEE
+#define MS5611_I2C_ADDRESS_H 0xEE		/*! CSB pin is HIGH */
+#define MS5611_I2C_ADDRESS_L 0xEC 		/*! CSB pin is LOW */
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -41,9 +42,15 @@
 
 /* Private variables ---------------------------------------------------------*/
 
+/*!
+ *  MS5611 general struct object(MS5611) and i2c HandleTypeDef
+ */
 MS5611_HandleTypeDef MS5611;
 I2C_HandleTypeDef hi2c1;
 
+/*!
+ * MS5611 measurement result variables
+ */
 int  MS5611_Press;
 int  MS5611_Temp;
 int  MS5611_Altitude;
@@ -95,13 +102,16 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-#ifdef MS5611_H_
 
-  MS5611.I2C_ADDRESS = MS5611_I2C_ADDRESS;
+/**
+ * MS5611 Headerguard to avoid redefinitions
+ */
+#ifdef MS5611_H_
+  MS5611.I2C_ADDRESS = MS5611_I2C_ADDRESS_H;
   MS5611.i2c = &hi2c1;
   MS5611_Init(&MS5611);
-
 #endif
+
   /* USER CODE END 2 */
 
   /* Infinite loop */

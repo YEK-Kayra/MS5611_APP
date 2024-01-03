@@ -48,14 +48,14 @@ typedef enum
 
 typedef struct{
 
-	unsigned int C1; 	/*! Pressure sensitivity 							(SENSt1)   */
-	unsigned int C2;	/*! Pressure offset 								(OFFt1)    */
-	unsigned int C3;	/*! Temperature coefficient of pressure sensitivity (TCS) 	   */
-	unsigned int C4;	/*! Temperature coefficient of pressure offset 		(TCO) 	   */
-	unsigned int C5;	/*! Reference temperature 20 °C 					(Tref) 	   */
-	unsigned int C6;	/*! Temperature coefficient of the temperature 		(TEMPSENS) */
+	uint16_t C1; 	/*! Pressure sensitivity 							(SENSt1)   */
+	uint16_t C2;	/*! Pressure offset 								(OFFt1)    */
+	uint16_t C3;	/*! Temperature coefficient of pressure sensitivity (TCS) 	   */
+	uint16_t C4;	/*! Temperature coefficient of pressure offset 		(TCO) 	   */
+	uint16_t C5;	/*! Reference temperature 20 °C 					(Tref) 	   */
+	uint16_t C6;	/*! Temperature coefficient of the temperature 		(TEMPSENS) */
 
-	unsigned int crc;	/*! 4-bit CRC has been implemented to check the data validity in memory*/
+	uint16_t crc;	/*! 4-bit CRC has been implemented to check the data validity in memory*/
 
 }MS5611_CalibrationCoef_TypeDef;
 
@@ -63,14 +63,14 @@ typedef struct{
 
 	uint32_t D1;	/*! Digital raw pressure value */
 	uint32_t D2;	/*! Digital raw temperature value */
-	double dT;			/*! Difference between actual and reference temperature */
-	double TEMP;		/*! Actual temperature (-40…85°C with 0.01°C resolution) */
-	double P;			/*! Temperature compensated pressure (10…1200mbar with 0.01mbar resolution) */
-	double OFF;			/*! Offset at actual temperature */
-	double SENS;		/*! Sensitivity at actual temperature */
-	double OFF2;		/*! Offset at actual temperature_2 */
-	double SENS2;  		/*! Sensitivity at actual temperature_2 */
-	double TEMP2; 		/*! Actual temperature_2 (-40…<20°C with 0.01°C resolution) */
+	float dT;			/*! Difference between actual and reference temperature */
+	float TEMP;		/*! Actual temperature (-40…85°C with 0.01°C resolution) */
+	float P;			/*! Temperature compensated pressure (10…1200mbar with 0.01mbar resolution) */
+	float OFF;			/*! Offset at actual temperature */
+	float SENS;		/*! Sensitivity at actual temperature */
+	float OFF2;		/*! Offset at actual temperature_2 */
+	float SENS2;  		/*! Sensitivity at actual temperature_2 */
+	float TEMP2; 		/*! Actual temperature_2 (-40…<20°C with 0.01°C resolution) */
 
 }MS5611_CalculationParams_TypeDef;
 

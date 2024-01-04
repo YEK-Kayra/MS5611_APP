@@ -22,7 +22,8 @@ extern float  MS5611_Press;		/*! Pressure data variable 			*/
 extern float  MS5611_Temp;		/*! Temperature data variable 		*/
 extern float  MS5611_Altitude;	/*! Vertical Altitude data variable */
 
-/**!These macros provide to calculate the altitude of BMP280 */
+/*! These macros provide to calculate the altitude of MS5611 */
+/*! The geographical altitude can be calculated by determining the absolute pressure.*/
 #define SeaLevelPress  101325
 #define SeaLevelTemp   288.15
 #define GradientTemp   0.0065

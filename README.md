@@ -1,8 +1,11 @@
 # MS5611_APP
  MS5611 pressure and temperature sensor application with SMT32 mcu
 First step ==> enter core files
+
 Second step ==> Find ms5611.h  in Inc file and ms5611.c in Src file
+
 Finally  ==> Adds these two files in your project, and don't forget look at main.c file. 
+
 
 # FIELD OF APPLICATION
 • High resolution module, 10 cm
@@ -43,6 +46,8 @@ altimeter/thermometer function without any additional sensor.
 
 # Important links
 •	[MS5611 Datasheet](https://datasheetspdf.com/pdf-file/921406/measurement/MS5611-01BA03/1)
+• [How to measure absolute pressure.pdf](https://github.com/YEK-Kayra/MS5611_APP/files/13834121/How.to.measure.absolute.pressure.pdf)
+
 
 # Technical Sensor Data Table
 ![teknikData](https://github.com/YEK-Kayra/MS5611_APP/assets/124110070/77df8082-be08-43d6-8971-a5908d68bc02)

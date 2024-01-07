@@ -46,7 +46,7 @@ altimeter/thermometer function without any additional sensor.
 
 
 # Important links
-•	[MS5611 Datasheet](https://datasheetspdf.com/pdf-file/921406/measurement/MS5611-01BA03/1)
+•	[MS5611-01BA03-measurement.pdf](https://github.com/YEK-Kayra/MS5611_APP/files/13853362/MS5611-01BA03-measurement.pdf)
 
 • [How to measure absolute pressure.pdf](https://github.com/YEK-Kayra/MS5611_APP/files/13834121/How.to.measure.absolute.pressure.pdf)
 

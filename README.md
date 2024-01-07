@@ -1,5 +1,7 @@
 # MS5611_APP
  MS5611 pressure and temperature sensor application with SMT32 mcu
+ work by i2c communication protocole, 
+ SPI protocole will be added in soon.
 
 First step ==> enter core files
 

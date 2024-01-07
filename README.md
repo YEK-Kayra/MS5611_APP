@@ -8,7 +8,7 @@ Second step ==> Find ms5611.h  in Inc file and ms5611.c in Src file
 Finally  ==> Adds these two files in your project, and don't forget look at main.c file. 
 
 
-# FIELD OF APPLICATION
+# FEATURES OF MS5611
 • High resolution module, 10 cm
 
 • Fast conversion down to 1 ms

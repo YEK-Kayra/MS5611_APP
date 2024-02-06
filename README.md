@@ -64,8 +64,11 @@ altimeter/thermometer function without any additional sensor.
 -You have to wait at least 20 milisecond to get datas from the sensor's chip
 
 (1)Raw data read request at selected osrs value
+
 (2)Indicate that you are ready to receive incoming data
+
 (3)Save incoming data to arrays as msb, lsb, xlsb
+
 ```
 	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &osrs_4096_D1, 1, 1000); //(1)
 	HAL_Delay(20);

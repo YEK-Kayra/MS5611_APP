@@ -69,6 +69,8 @@ altimeter/thermometer function without any additional sensor.
 
 (3)Save incoming data to arrays as msb, lsb, xlsb
 
+Gets D1(Raw Pressure) ⇩
+
 ```
 	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &osrs_4096_D1, 1, 1000); //(1)
 	HAL_Delay(20);

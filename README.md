@@ -62,6 +62,7 @@ altimeter/thermometer function without any additional sensor.
 
 # Attention !
 -You have to wait at least 20 milisecond to get datas from the sensor's chip
+
 (1)Raw data read request at selected osrs value
 (2)Indicate that you are ready to receive incoming data
 (3)Save incoming data to arrays as msb, lsb, xlsb

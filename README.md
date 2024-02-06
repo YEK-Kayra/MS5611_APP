@@ -60,3 +60,17 @@ altimeter/thermometer function without any additional sensor.
 
 
 
+## Kullanım/Örnekler
+
+```javascript
+import Component from 'benim-projem'
+
+function App() {
+  return <Component />
+}
+```
+
+  
+
+
+

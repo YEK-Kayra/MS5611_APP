@@ -62,7 +62,7 @@ altimeter/thermometer function without any additional sensor.
 
 ## Kullanım/Örnekler
 
-```javascript
+```C
 import Component from 'benim-projem'
 
 function App() {

@@ -62,12 +62,8 @@ altimeter/thermometer function without any additional sensor.
 
 ## Kullanım/Örnekler
 
-```C
-import Component from 'benim-projem'
+```
 
-function App() {
-  return <Component />
-}
 ```
 
   

@@ -64,7 +64,7 @@ altimeter/thermometer function without any additional sensor.
 
 ```
 You have to wait at least 20 milisecond to get datas from the sensor's chip
-/*! Gets D1(Raw Pressure)*/
+
 	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &osrs_4096_D1, 1, 1000); //(1)
 	HAL_Delay(20);
 	HAL_I2C_Master_Transmit(dev->i2c, dev->I2C_ADDRESS, &adcReadCom , 1, 1000);	 //(2)

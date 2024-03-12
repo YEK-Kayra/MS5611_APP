@@ -66,7 +66,7 @@ typedef struct{
 	uint32_t D2;		/*! Digital raw temperature value */
 	float dT;			/*! Difference between actual and reference temperature */
 	float TEMP;			/*! Actual temperature (-40…85°C with 0.01°C resolution) */
-	float P;			/*! Temperature compensated pressure (10…1200mbar with 0.01mbar resolution) */
+	float P;			/*! Compensated pressure (10…1200mbar with 0.01mbar resolution) */
 	float OFF;			/*! Offset at actual temperature */
 	float SENS;			/*! Sensitivity at actual temperature */
 	float OFF2;			/*! Offset at actual temperature_2 */

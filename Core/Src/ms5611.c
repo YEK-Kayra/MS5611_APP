@@ -182,7 +182,7 @@ void MS5611_SecondCalculateDatas(MS5611_HandleTypeDef *dev){
 float MS5611_Calc_Altitude(MS5611_HandleTypeDef *dev){
 
 	/*! The geographical altitude can be calculated by determining the absolute pressure.*/
-	return (SeaLevelTemp / GradientTemp) * (1 - pow((dev->ClcPrms.P / SeaLevelPress),((GasCoefficient * GradientTemp)/GravityAccel)));
+	return (dev->ClcPrms.P / GradientTemp) * (1 - pow((dev->ClcPrms.P / SeaLevelPress),((GasCoefficient * GradientTemp)/GravityAccel)));
 
 }
 
